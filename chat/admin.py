@@ -7,4 +7,4 @@ class MessageAdmin(admin.ModelAdmin):
     search_fields = ('text',)
 
 admin.site.register(Message, MessageAdmin)
-admin.site.register(Chat)
+# admin.site.register(Chat)
