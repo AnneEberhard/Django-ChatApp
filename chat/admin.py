@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Message
+from .models import Chat, Message
 
 class MessageAdmin(admin.ModelAdmin):
     fields = ('text', 'created_at', 'author', 'receiver')
@@ -7,3 +7,4 @@ class MessageAdmin(admin.ModelAdmin):
     search_fields = ('text',)
 
 admin.site.register(Message, MessageAdmin)
+admin.site.register(Chat)
