@@ -13,6 +13,10 @@
         padding: 100px 100px;
     }
 
+    .colorGrey {
+      color: gray;
+      font-size: 12px;
+    }
 </style>
 
 <!-- Always shows a header, even in smaller screens. -->
@@ -45,6 +49,14 @@
   </div>
   <main class="mdl-layout__content">
     <div class="page-content">
+
+      {% for message in messages %}
+      <div>
+       <span class="colorGrey">[{{ message.created_at }}]</span> {{ message.author.first_name }}: <i>{{ message.text }}</i>
+      </div>
+      {% endfor %}
+
+
       <form action="/chat/" method="post">
         {% csrf_token %}
         <div
