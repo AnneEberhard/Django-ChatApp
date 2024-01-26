@@ -56,17 +56,16 @@ def registerView(request):
         password = request.POST.get('password')
         repeatPassword = request.POST.get('repeatPassword')
         try:
-            validate_password(password)
+#            validate_password(password)
             if password == repeatPassword:
-                hashed_password = make_password(password)
-                user = User.objects.create(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
-                user.set_password(hashed_password)
-                user.save()
+#                hashed_password = make_password(password)
+                user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
+#                user.set_password(hashed_password)
+#                user.save()
                 return render(request, 'auth/login.html')
             else:
                 return render(request, 'auth/register.html', {'passwordNoMatch': True})  
         except Exception as e:
-                print('Fehler:', e)
                 return render(request, 'auth/register.html', {'passwordNoValidate': True})  
     return render(request, 'auth/register.html')
 
