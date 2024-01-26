@@ -6,7 +6,6 @@
 <a class="logout" href="/logout/">Logout</a>
 
 {% for message in messages %}
-
 <div>
   <span class="colorGrey">[{{ message.created_at }}]</span>
   {{ message.author.first_name }}: <i>{{ message.text }}</i>
@@ -15,21 +14,20 @@
 
 <script>
   async function sendMessage() {
-    let fd = new FormData();
-    let token = '{{ csrf_token}}'
-    fd.append('textmessage', messageField.value);
-    fd.append('csrfmiddlewaretoken', token);
+    let fd = new FormData(); //neues Formular aus Javascript
+    let token = '{{ csrf_token}}' //token als extra Variable, weil, er sonst durcheinander kommt
+    fd.append('textmessage', messageField.value); //form wird die neue Nachricht angehängt
+    fd.append('csrfmiddlewaretoken', token); //token wird angehängt
     try {
-      await fetch('/chat/', {
+      await fetch('/chat/', { 
       method: 'POST',
       body: fd
-    });
-    console.log('Success!!')
+    });        //er greift mit der Methode POST auf die url /chat/ zu und sendet die form mit
     } catch(e) {
-      console.log('Error:', e)
+      console.log('Error:', e) //safety catch für Fehler
     }
-
   }
+  
 </script>
 
 <form onsubmit="sendMessage(); return false" method="post">
