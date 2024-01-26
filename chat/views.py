@@ -33,6 +33,18 @@ def loginView(request):
             return render(request, 'auth/login.html', {'wrongPassword': True, 'redirect': redirect})
     return render(request, 'auth/login.html', {'redirect': redirect})
 
+#def registerView(request):
+#    if request.method == 'POST':
+#        username = request.POST.get('username')
+#        email = request.POST.get('email')
+#        password = request.POST.get('password')
+#        repeatPassword = request.POST.get('repeatPassword')
+#        if password == repeatPassword:
+#            user = User.objects.create_user(username, email, password)
+#            return render(request, 'auth/login.html')
+#        else:
+#            return render(request, 'auth/register.html', {'passwordNoMatch': True})    
+#    return render(request, 'auth/register.html')
 
 
 def registerView(request):
