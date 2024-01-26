@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<h1>Register</h1>
+
+{% if passwordNoMatch %}
+    <p>Passwords do not match. Please try again.</p>
+{% endif %}
+
+<form method="POST" action="/register/">
+    {% csrf_token %}
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input name="username" type="text" class="mdl-textfield__input">
+        <label class="mdl-textfield__label" for="sample3">your name</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input name="email" type="email" class="mdl-textfield__input">
+        <label class="mdl-textfield__label" for="sample3">your email</label>
+    </div>
+    <br>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input name="password" type="password" class="mdl-textfield__input">
+        <label class="mdl-textfield__label" for="sample3">your password</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input name="repeatPassword" type="password" class="mdl-textfield__input">
+        <label class="mdl-textfield__label" for="sample3">repeat password</label>
+    </div>
+    <div><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Register</button></div>
+</form>
+
+{% endblock %}
