@@ -6,3 +6,9 @@
     color: gray;
     font-size: 12px;
   }
+
+  .logout {
+    position: absolute;
+    right: 20px;
+    top: 50px;
+  }

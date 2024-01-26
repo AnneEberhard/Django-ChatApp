@@ -8,18 +8,23 @@
     <p>Passwords do not match. Please try again.</p>
 {% endif %}
 
+{% if passwordNoValidate %}
+    <p>Password needs at least 8 characters and cannot be too common or entirely numeric. Please try again.</p>
+{% endif %}
+
+
 <form method="POST" action="/register/">
     {% csrf_token %}
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input name="username" type="text" class="mdl-textfield__input">
+        <input required name="username" type="text" class="mdl-textfield__input">
         <label class="mdl-textfield__label" for="sample3">your username</label>
     </div>
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input name="email" type="email" class="mdl-textfield__input">
+        <input required name="email" type="email" class="mdl-textfield__input">
         <label class="mdl-textfield__label" for="sample3">your email</label>
     </div>
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input name="first_name" type="text" class="mdl-textfield__input">
+        <input required name="first_name" type="text" class="mdl-textfield__input">
         <label class="mdl-textfield__label" for="sample3">your first name</label>
     </div>
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -29,7 +34,7 @@
     <br>
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
         <input name="password" type="password" class="mdl-textfield__input">
-        <label class="mdl-textfield__label" for="sample3">your password</label>
+        <label class="mdl-textfield__label" for="sample3">your password (at least 8 characters)</label>
     </div>
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
         <input name="repeatPassword" type="password" class="mdl-textfield__input">

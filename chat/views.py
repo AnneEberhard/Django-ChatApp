@@ -4,6 +4,8 @@ from .models import Chat, Message
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.hashers import make_password
 
 
 @login_required(login_url='/login/')
@@ -32,19 +34,7 @@ def loginView(request):
     return render(request, 'auth/login.html', {'redirect': redirect})
 
 
-#def registerView(request):
-#    if request.method == 'POST':
-#        username = request.POST.get('username')
-#        email = request.POST.get('email')
-#        password = request.POST.get('password')
-#        repeatPassword = request.POST.get('repeatPassword')
-#        if password == repeatPassword:
-#            user = User.objects.create_user(username, email, password)
-#            return render(request, 'auth/login.html')
-#        else:
-#            return render(request, 'auth/register.html', {'passwordNoMatch': True})    
-#    return render(request, 'auth/register.html')
-#
+
 def registerView(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -53,13 +43,21 @@ def registerView(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         repeatPassword = request.POST.get('repeatPassword')
-        
-        if password == repeatPassword:
-            user = User.objects.create(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
-            return render(request, 'auth/login.html')
-        else:
-            return render(request, 'auth/register.html', {'passwordNoMatch': True})    
+        try:
+            validate_password(password)
+            if password == repeatPassword:
+                hashed_password = make_password(password)
+                user = User.objects.create(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
+                user.set_password(hashed_password)
+                user.save()
+                return render(request, 'auth/login.html')
+            else:
+                return render(request, 'auth/register.html', {'passwordNoMatch': True})  
+        except Exception as e:
+                print('Fehler:', e)
+                return render(request, 'auth/register.html', {'passwordNoValidate': True})  
     return render(request, 'auth/register.html')
+
 
 def logoutView(request):
     print('link works')
