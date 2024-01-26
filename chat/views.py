@@ -32,19 +32,34 @@ def loginView(request):
     return render(request, 'auth/login.html', {'redirect': redirect})
 
 
+#def registerView(request):
+#    if request.method == 'POST':
+#        username = request.POST.get('username')
+#        email = request.POST.get('email')
+#        password = request.POST.get('password')
+#        repeatPassword = request.POST.get('repeatPassword')
+#        if password == repeatPassword:
+#            user = User.objects.create_user(username, email, password)
+#            return render(request, 'auth/login.html')
+#        else:
+#            return render(request, 'auth/register.html', {'passwordNoMatch': True})    
+#    return render(request, 'auth/register.html')
+#
 def registerView(request):
     if request.method == 'POST':
         username = request.POST.get('username')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
         email = request.POST.get('email')
         password = request.POST.get('password')
         repeatPassword = request.POST.get('repeatPassword')
+        
         if password == repeatPassword:
-            user = User.objects.create_user(username, email, password)
+            user = User.objects.create(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
             return render(request, 'auth/login.html')
         else:
             return render(request, 'auth/register.html', {'passwordNoMatch': True})    
     return render(request, 'auth/register.html')
-
 
 def logoutView(request):
     print('link works')

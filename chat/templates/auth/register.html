@@ -12,11 +12,19 @@
     {% csrf_token %}
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
         <input name="username" type="text" class="mdl-textfield__input">
-        <label class="mdl-textfield__label" for="sample3">your name</label>
+        <label class="mdl-textfield__label" for="sample3">your username</label>
     </div>
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
         <input name="email" type="email" class="mdl-textfield__input">
         <label class="mdl-textfield__label" for="sample3">your email</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input name="first_name" type="text" class="mdl-textfield__input">
+        <label class="mdl-textfield__label" for="sample3">your first name</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input name="last_name" type="text" class="mdl-textfield__input">
+        <label class="mdl-textfield__label" for="sample3">your last name</label>
     </div>
     <br>
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -25,7 +33,7 @@
     </div>
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
         <input name="repeatPassword" type="password" class="mdl-textfield__input">
-        <label class="mdl-textfield__label" for="sample3">repeat password</label>
+        <label class="mdl-textfield__label" for="sample3">please repeat your password</label>
     </div>
     <div><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Register</button></div>
 </form>
