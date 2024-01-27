@@ -1,42 +1,91 @@
-{% extends "base.html" %}
-{% block content %}
-
-
-{% if request.user.is_authenticated %} 
+{% extends "base.html" %} 
+{% block content %} 
+{% if request.user.is_authenticated %}
 <a class="logout" href="/logout/">Logout</a>
 
-{% for message in messages %}
-<div>
-  <span class="colorGrey">[{{ message.created_at }}]</span>
-  {{ message.author.first_name }}: <i>{{ message.text }}</i>
+<div id="messageContainer">
+  {% for message in messages %}
+  <div>
+    <span class="colorGrey">[{{ message.created_at }}]</span>
+    {{ message.author.first_name }}: <i>{{ message.text }}</i>
+  </div>
+  {% endfor %}
 </div>
-{% endfor %}
 
 <script>
   async function sendMessage() {
-    let fd = new FormData(); //neues Formular aus Javascript
-    let token = '{{ csrf_token}}' //token als extra Variable, weil, er sonst durcheinander kommt
-    fd.append('textmessage', messageField.value); //form wird die neue Nachricht angehängt
-    fd.append('csrfmiddlewaretoken', token); //token wird angehängt
+    let fd = new FormData();
+    let token = "{{ csrf_token}}";
+    let user = '{{ request.user.first_name }}';
+    fd.append("textmessage", messageField.value);
+    fd.append("csrfmiddlewaretoken", token);
     try {
-      await fetch('/chat/', { 
-      method: 'POST',
-      body: fd
-    });        //er greift mit der Methode POST auf die url /chat/ zu und sendet die form mit
-    } catch(e) {
-      console.log('Error:', e) //safety catch für Fehler
+      renderSendingMessage(messageField.value, user);
+      await fetch("/chat/", {
+        method: "POST",
+        body: fd,
+      });
+      renderSentMessage(messageField.value, user);
+    } catch (e) {
+      console.log("Error:", e);
+      renderMessageNotSent(messageField.value, user);
     }
   }
-  
+
+  function getCurrentFormattedDate() {
+    const options = { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric' 
+    };
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleDateString('en-US', options);
+    const monthWithDot = formattedDate.replace(/^(\w+)( \d+, \d+)$/, '$1.$2');
+    return monthWithDot;
+  }
+
+
+  function renderSendingMessage(newMessageText, user) {
+    const formattedDate = getCurrentFormattedDate();
+    messageContainer.innerHTML += `
+      <div id="deleteMessage">
+        <span class="colorGrey">[${formattedDate}] </span>${user}: <i class="colorGrey">${newMessageText}</i>
+      </div>`;
+  }
+
+  function renderSentMessage(newMessageText, user) {
+    const formattedDate = getCurrentFormattedDate();
+    document.getElementById('deleteMessage').remove();
+    messageContainer.innerHTML += `
+    <div id="deleteMessage">
+    <span class="colorGrey">[${formattedDate}] </span>${user}: <i>${newMessageText}</i>
+    </div>`;
+  }
+
+  function renderMessageNotSent(newMessageText, user) {
+    const formattedDate = getCurrentFormattedDate();
+    document.getElementById('deleteMessage').remove();
+    messageContainer.innerHTML += `
+    <div id="deleteMessage">
+    <span class="colorGrey">[${formattedDate}] </span>${user}: <i class="colorRed">${newMessageText}, Message not sent</i>
+    </div>`;
+  }
 </script>
 
 <form onsubmit="sendMessage(); return false" method="post">
   {% csrf_token %}
   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    <input class="mdl-textfield__input" name="textmessage" type="text" id="messageField">
+    <input
+      class="mdl-textfield__input"
+      name="textmessage"
+      type="text"
+      id="messageField"
+    />
     <label class="mdl-textfield__label" for="messageField">Text...</label>
   </div>
-  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+  <button
+    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+  >
     Send
   </button>
 </form>
@@ -47,5 +96,5 @@
   You are not logged in. Please log in.<br />
   Please click <a href="/login/">here</a>.
 </p>
-{% endif %}
+{% endif %} 
 {% endblock %}
