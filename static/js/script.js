@@ -11,11 +11,13 @@ async function sendMessage() {
     fd.append("csrfmiddlewaretoken", token);
     try {
       renderSendingMessage(messageField.value, user);
-      await fetch("/chat/", {
+      let response = await fetch("/chat/", {
         method: "POST",
         body: fd,
       });
-      renderSentMessage(messageField.value, user);
+      let jsonText = await response.json();
+      let json = JSON.parse(jsonText);
+      renderSentMessage(json['fields']['text'], json['fields']['author'], json['fields']['created_at']);
     } catch (e) {
       console.log("Error:", e);
       renderMessageNotSent(messageField.value, user);
@@ -43,20 +45,21 @@ async function sendMessage() {
       </div>`;
   }
 
-  function renderSentMessage(newMessageText, user) {
-    const formattedDate = getCurrentFormattedDate();
+  function renderSentMessage(newMessageText, user, createdAt) {
+    const formattedDate = getCurrentFormattedDate(new Date(createdAt));
     document.getElementById('deleteMessage').remove();
     messageContainer.innerHTML += `
-    <div id="deleteMessage">
+    <div>
     <span class="colorGrey">[${formattedDate}] </span>${user}: <i>${newMessageText}</i>
     </div>`;
+    messageField.value = '';
   }
 
   function renderMessageNotSent(newMessageText, user) {
     const formattedDate = getCurrentFormattedDate();
     document.getElementById('deleteMessage').remove();
     messageContainer.innerHTML += `
-    <div id="deleteMessage">
-    <span class="colorGrey">[${formattedDate}] </span>${user}: <i class="colorRed">${newMessageText}, Message not sent</i>
+    <div>
+    <span class="colorGrey">[${formattedDate}] </span>${user}: <i class="colorRed">${newMessageText} (Message not sent)</i>
     </div>`;
   }

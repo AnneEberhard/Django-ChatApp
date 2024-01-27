@@ -1,11 +1,14 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
-from .models import Chat, Message
+from .models import Chat,  Message
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password
+from django.core import serializers
+import json
+
 
 
 @login_required(login_url='/login/')
@@ -14,10 +17,21 @@ def index(request):
     if request.method == 'POST':    
         print("Received data " + request.POST['textmessage'])
         myChat = Chat.objects.get(id=1)
-        Message.objects.create(text=request.POST['textmessage'], chat=myChat, author=request.user, receiver=request.user)
+        newMessage = Message.objects.create(text=request.POST['textmessage'], chat=myChat, author=request.user, receiver=request.user)
+        serializedMessage = json.dumps([{
+            "model": "chat.message",
+            "pk": newMessage.pk,
+            "fields": {
+                "text": newMessage.text,
+                "created_at": str(newMessage.created_at),
+                "author": request.user.first_name,
+                "receiver": newMessage.receiver_id,
+                "chat": newMessage.chat_id,
+            }
+        }])
+        return JsonResponse(serializedMessage[1:-1], safe=False, content_type='application/json')
     chatMessages = Message.objects.filter(chat__id=1) 
     return render(request, 'chat/index.html', {'messages': chatMessages,'username': username }) 
-
 
 
 def loginView(request):
