@@ -64,6 +64,7 @@ async function sendMessage() {
 
 
   async function handleLogin() {
+    let formElements = ['username', 'password'];
     let username = document.getElementById('username').value;  
     let password = document.getElementById('password').value;  
     let fd = new FormData();
@@ -71,7 +72,7 @@ async function sendMessage() {
     fd.append("username", username);
     fd.append("password", password);
     fd.append("csrfmiddlewaretoken", token);
-    disableFields();
+    disableFields(formElements);
     try {
       let response = await fetch("/login/", {
         method: "POST",
@@ -81,31 +82,86 @@ async function sendMessage() {
       if (json.success) {
         window.location.href = json.redirect; 
       } else {
-        loginFailed();
+        errorMessage('loginFailed', formElements);
       }
     } catch (e) {
       console.log("Error:", e);
     }
-    enableFields();
+    enableFields(formElements);
   }
 
 
-  function disableFields() {
-    document.getElementById('username').disabled = true;
-    document.getElementById('password').disabled = true;
-    document.getElementById('username').classList.add('disabled');
-    document.getElementById('password').classList.add('disabled');
+  function disableFields(elementsArray) {
+    elementsArray.forEach(element => {
+      document.getElementById(element).disabled = true;
+      document.getElementById(element).classList.add('disabled');
+    });
   }
 
-  function enableFields() {
-    document.getElementById('username').disabled = false;
-    document.getElementById('password').disabled = false;
-    document.getElementById('username').classList.remove('disabled')
-    document.getElementById('password').classList.remove('disabled')
+  function enableFields(elementsArray) {
+    elementsArray.forEach(element => {
+      document.getElementById(element).disabled = false;
+      document.getElementById(element).classList.remove('disabled');
+    });
   }
 
-  function loginFailed() {
-    document.getElementById('errorMessage').style.display = 'block';
-    document.getElementById('username').value = '';
-    document.getElementById('password').value = '';
+  function errorMessage(divId, elementsArray) {
+    document.getElementById(divId).style.display = 'block';
+    elementsArray.forEach(element => {
+    document.getElementById(element).value = '';
+    })
+  }
+
+  async function handleRegister() {
+    let formElements = ['username','email','first_name','last_name','password','repeat_password'];
+    fd = await getRegisterData();
+    console.log(fd);
+    disableFields(formElements);
+    try {
+      let response = await fetch("/register/", {
+        method: "POST",
+        body: fd,
+      });
+      let json = await response.json();
+      console.log(json);
+      if (json.success) {
+        window.location.href = json.redirect; 
+      } else {
+        if (json.passwordNoMatch) {
+          errorMessage('passwordNoMatch',formElements);
+        } else {
+          clearErrorMessage('passwordNoMatch');
+        }
+        if (passwordNoValidate) {
+          errorMessage('passwordNoValidate',formElements);
+        } else {
+          clearErrorMessage('passwordNoValidate');}}
+    } catch (e) {
+      console.log("Error:", e);
+    }
+    enableFields(formElements);
+  }
+
+  async function getRegisterData() {
+    let username = document.getElementById('username').value;  
+    let email = document.getElementById('email').value;  
+    let first_name = document.getElementById('first_name').value;  
+    let last_name = document.getElementById('last_name').value;  
+    let password = document.getElementById('password').value;  
+    let repeat_password = document.getElementById('repeat_password').value;  
+    let fd = new FormData();
+    let token = csrfToken;
+    fd.append("username", username);
+    fd.append("email", email);
+    fd.append("first_name", first_name);
+    fd.append("last_name", last_name);
+    fd.append("password", password);
+    fd.append("repeat_password", repeat_password);
+    fd.append("csrfmiddlewaretoken", token);
+    console.log('aus Funktion ',fd)
+    return fd;
+  }
+
+  function clearErrorMessage(divId) {
+    document.getElementById(divId).style.display = 'none';
   }

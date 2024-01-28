@@ -56,7 +56,7 @@ def index(request):
 
 def loginView(request):
     """
-    This function processes the login request and returns a JSON response for POST and a HTTP for other reuests.
+    This function processes the login request and returns a JSON response for POST and a HTTP for other requests.
     """
     redirect = request.GET.get('next')
     if request.method == 'POST':
@@ -73,9 +73,30 @@ def loginView(request):
         return render(request, 'auth/login.html', {'redirect': redirect})
 
 
+#def registerView(request):
+#    """
+#    This functions renders the register.html.
+#    """
+#    if request.method == 'POST':
+#        username = request.POST.get('username')
+#        first_name = request.POST.get('first_name')
+#        last_name = request.POST.get('last_name')
+#        email = request.POST.get('email')
+#        password = request.POST.get('password')
+#        repeatPassword = request.POST.get('repeatPassword')
+#        try:
+#            if password == repeatPassword:
+#                User.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
+#                return render(request, 'auth/login.html')
+#            else:
+#                return render(request, 'auth/register.html', {'passwordNoMatch': True})  
+#        except Exception as e:
+#                return render(request, 'auth/register.html', {'passwordNoValidate': True})  
+#    return render(request, 'auth/register.html')
+
 def registerView(request):
     """
-    This functions renders the register.html.
+    This functions processes the register request and returns a JSON response for POST and a HTTP for other requests.
     """
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -87,12 +108,13 @@ def registerView(request):
         try:
             if password == repeatPassword:
                 User.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
-                return render(request, 'auth/login.html')
+                return JsonResponse({'success': True, 'redirect': '/login/'}, safe=False, content_type='application/json')
             else:
-                return render(request, 'auth/register.html', {'passwordNoMatch': True})  
+                return JsonResponse({'success': False, 'passwordNoMatch': True}, safe=False, content_type='application/json')
         except Exception as e:
-                return render(request, 'auth/register.html', {'passwordNoValidate': True})  
-    return render(request, 'auth/register.html')
+                return JsonResponse({'success': False, 'passwordNoValidate': True}, safe=False, content_type='application/json')
+    else:
+        return render(request, 'auth/register.html')
 
 
 def logoutView(request):
