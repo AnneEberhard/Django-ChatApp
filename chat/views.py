@@ -13,6 +13,9 @@ import json
 
 @login_required(login_url='/login/')
 def index(request):
+    """
+    This functions renders the chat.html.
+    """
     username = request.user.first_name if request.user.is_authenticated else "DefaultUsername" 
     if request.method == 'POST':    
         print("Received data " + request.POST['textmessage'])
@@ -35,6 +38,9 @@ def index(request):
 
 
 def loginView(request):
+    """
+    This functions renders the login.html.
+    """
     redirect = request.GET.get('next')
     if request.method == 'POST':
         user = authenticate(username=request.POST.get('username'), password=request.POST.get('password'))
@@ -50,6 +56,9 @@ def loginView(request):
 
 
 def registerView(request):
+    """
+    This functions renders the register.html.
+    """
     if request.method == 'POST':
         username = request.POST.get('username')
         first_name = request.POST.get('first_name')
@@ -60,10 +69,7 @@ def registerView(request):
         try:
 #            validate_password(password)
             if password == repeatPassword:
-#                hashed_password = make_password(password)
-                user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
-#                user.set_password(hashed_password)
-#                user.save()
+                User.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
                 return render(request, 'auth/login.html')
             else:
                 return render(request, 'auth/register.html', {'passwordNoMatch': True})  
@@ -73,6 +79,8 @@ def registerView(request):
 
 
 def logoutView(request):
-    print('link works')
+    """
+    This functions initates logout and returns to login.html.
+    """
     logout(request)
     return HttpResponseRedirect('/login/')
