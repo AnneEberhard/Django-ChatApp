@@ -18,7 +18,6 @@ def index(request):
     """
     username = request.user.first_name if request.user.is_authenticated else "DefaultUsername" 
     if request.method == 'POST':    
-        print("Received data " + request.POST['textmessage'])
         myChat = Chat.objects.get(id=1)
         newMessage = Message.objects.create(text=request.POST['textmessage'], chat=myChat, author=request.user, receiver=request.user)
         serializedMessage = json.dumps([{
@@ -37,22 +36,41 @@ def index(request):
     return render(request, 'chat/index.html', {'messages': chatMessages,'username': username }) 
 
 
+#def loginView(request):
+#    """
+#    This functions renders the login.html.
+#    """
+#    redirect = request.GET.get('next')
+#    if request.method == 'POST':
+#        user = authenticate(username=request.POST.get('username'), password=request.POST.get('password'))
+#        if user:
+#            login(request, user)
+#            if redirect:
+#                return HttpResponseRedirect(request.POST.get('redirect'))
+#            else:
+#                return HttpResponseRedirect('/chat/')
+#        else:
+#            return render(request, 'auth/login.html', {'wrongPassword': True, 'redirect': redirect})
+#    return render(request, 'auth/login.html', {'redirect': redirect})
+
+
 def loginView(request):
     """
-    This functions renders the login.html.
+    This function processes the login request and returns a JSON response for POST and a HTTP for other reuests.
     """
     redirect = request.GET.get('next')
     if request.method == 'POST':
-        user = authenticate(username=request.POST.get('username'), password=request.POST.get('password'))
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        
         if user:
             login(request, user)
-            if redirect:
-                return HttpResponseRedirect(request.POST.get('redirect'))
-            else:
-                return HttpResponseRedirect('/chat/')
+            return JsonResponse({'success': True, 'redirect': redirect or '/chat/'}, safe=False, content_type='application/json')
         else:
-            return render(request, 'auth/login.html', {'wrongPassword': True, 'redirect': redirect})
-    return render(request, 'auth/login.html', {'redirect': redirect})
+            return JsonResponse({'success': False, 'message': 'Wrong username or password'}, safe=False, content_type='application/json')
+    else:
+        return render(request, 'auth/login.html', {'redirect': redirect})
 
 
 def registerView(request):
@@ -67,7 +85,6 @@ def registerView(request):
         password = request.POST.get('password')
         repeatPassword = request.POST.get('repeatPassword')
         try:
-#            validate_password(password)
             if password == repeatPassword:
                 User.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
                 return render(request, 'auth/login.html')

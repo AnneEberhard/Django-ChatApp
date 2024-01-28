@@ -5,8 +5,6 @@ async function sendMessage() {
     let fd = new FormData();
     let token = csrfToken;
     let user = activeUser;
-   //let token = "{{ csrf_token}}";
-   //let user = '{{ request.user.first_name }}';
     fd.append("textmessage", messageField.value);
     fd.append("csrfmiddlewaretoken", token);
     try {
@@ -62,4 +60,52 @@ async function sendMessage() {
     <div>
     <span class="colorGrey">[${formattedDate}] </span>${user}: <i class="colorRed">${newMessageText} (Message not sent)</i>
     </div>`;
+  }
+
+
+  async function handleLogin() {
+    let username = document.getElementById('username').value;  
+    let password = document.getElementById('password').value;  
+    let fd = new FormData();
+    let token = csrfToken;
+    fd.append("username", username);
+    fd.append("password", password);
+    fd.append("csrfmiddlewaretoken", token);
+    disableFields();
+    try {
+      let response = await fetch("/login/", {
+        method: "POST",
+        body: fd,
+      });
+      let json = await response.json();
+      if (json.success) {
+        window.location.href = json.redirect; 
+      } else {
+        loginFailed();
+      }
+    } catch (e) {
+      console.log("Error:", e);
+    }
+    enableFields();
+  }
+
+
+  function disableFields() {
+    document.getElementById('username').disabled = true;
+    document.getElementById('password').disabled = true;
+    document.getElementById('username').classList.add('disabled');
+    document.getElementById('password').classList.add('disabled');
+  }
+
+  function enableFields() {
+    document.getElementById('username').disabled = false;
+    document.getElementById('password').disabled = false;
+    document.getElementById('username').classList.remove('disabled')
+    document.getElementById('password').classList.remove('disabled')
+  }
+
+  function loginFailed() {
+    document.getElementById('errorMessage').style.display = 'block';
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
   }

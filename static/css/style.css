@@ -15,3 +15,8 @@
     right: 20px;
     top: 50px;
   }
+
+  .disabled {
+    filter: grayscale(1);
+    color: gray !important;
+  }
