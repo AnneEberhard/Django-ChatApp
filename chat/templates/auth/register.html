@@ -12,6 +12,10 @@
     <p>Password needs at least 8 characters and cannot be too common or entirely numeric. Please try again.</p>
 </div>
 
+<div id="error" style="display: none;">
+    <p>An error has occured. Please try again.</p>
+</div>
+
 
 <form onsubmit="handleRegister(); return false" method="POST">
     {% csrf_token %}
