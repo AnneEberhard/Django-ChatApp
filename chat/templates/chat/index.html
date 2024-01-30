@@ -1,7 +1,6 @@
 {% extends "base.html" %} 
 {% block content %} 
 {% if request.user.is_authenticated %}
-<a class="logout" href="/logout/">Logout</a>
 
 <div id="messageContainer">
   {% for message in messages %}
