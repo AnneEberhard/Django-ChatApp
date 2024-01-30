@@ -20,3 +20,23 @@
     filter: grayscale(1);
     color: gray !important;
   }
+
+#messageContainer {
+  display: flex;
+  flex-direction: column;
+
+}
+
+  .messageBox {
+    margin: 4px;
+    background-color: pink;
+    padding: 8px;
+    width: 30vw;
+    overflow: auto;
+    border: blue 2px solid;
+    border-radius: 10px;
+  }
+
+  .authorMessage {
+      margin-left: auto;
+  }

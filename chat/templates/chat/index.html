@@ -5,8 +5,8 @@
 
 <div id="messageContainer">
   {% for message in messages %}
-  <div>
-    <span class="colorGrey">[{{ message.created_at }}]</span>
+  <div class="messageBox {% if message.author == request.user %} authorMessage{% endif %}">
+    <span class="colorGrey">[{{ message.created_at }}]</span><br>
     {{ message.author.first_name }}: <i>{{ message.text }}</i>
   </div>
   {% endfor %}
