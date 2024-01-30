@@ -16,7 +16,8 @@
 
 </script>
 
-<form onsubmit="sendMessage(); return false" method="post">
+<div class="central">
+<form onsubmit="sendMessage(); return false" method="post" >
   {% csrf_token %}
   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
     <input
@@ -33,6 +34,7 @@
     Send
   </button>
 </form>
+</div>
 
 {% else %}
 <h1>Not logged in</h1>

@@ -1,14 +1,11 @@
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.urls import resolve, reverse
 from .models import Chat,  Message
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.contrib.auth.password_validation import validate_password
-from django.contrib.auth.hashers import make_password
-from django.core import serializers
 import json
-
 
 
 @login_required(login_url='/login/')
@@ -36,24 +33,6 @@ def index(request):
     return render(request, 'chat/index.html', {'messages': chatMessages,'username': username }) 
 
 
-#def loginView(request):
-#    """
-#    This functions renders the login.html.
-#    """
-#    redirect = request.GET.get('next')
-#    if request.method == 'POST':
-#        user = authenticate(username=request.POST.get('username'), password=request.POST.get('password'))
-#        if user:
-#            login(request, user)
-#            if redirect:
-#                return HttpResponseRedirect(request.POST.get('redirect'))
-#            else:
-#                return HttpResponseRedirect('/chat/')
-#        else:
-#            return render(request, 'auth/login.html', {'wrongPassword': True, 'redirect': redirect})
-#    return render(request, 'auth/login.html', {'redirect': redirect})
-
-
 def login_view(request):
     """
     This function processes the login request and returns a JSON response for POST and a HTTP for other requests.
@@ -72,27 +51,6 @@ def login_view(request):
     else:
         return render(request, 'auth/login.html', {'redirect': redirect})
 
-
-#def registerView(request):
-#    """
-#    This functions renders the register.html.
-#    """
-#    if request.method == 'POST':
-#        username = request.POST.get('username')
-#        first_name = request.POST.get('first_name')
-#        last_name = request.POST.get('last_name')
-#        email = request.POST.get('email')
-#        password = request.POST.get('password')
-#        repeatPassword = request.POST.get('repeatPassword')
-#        try:
-#            if password == repeatPassword:
-#                User.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
-#                return render(request, 'auth/login.html')
-#            else:
-#                return render(request, 'auth/register.html', {'passwordNoMatch': True})  
-#        except Exception as e:
-#                return render(request, 'auth/register.html', {'passwordNoValidate': True})  
-#    return render(request, 'auth/register.html')
 
 def register_view(request):
     """
@@ -123,3 +81,17 @@ def logout_view(request):
     """
     logout(request)
     return HttpResponseRedirect('/login/')
+
+
+def imprint_view(request):
+    """
+    This functions renders the imprint.html.
+    """
+    return render(request, 'legal/imprint.html')
+
+
+def privacy_policy_view(request):
+    """
+    This functions renders the privacy_policy.html.
+    """
+    return render(request, 'legal/privacy_policy.html')

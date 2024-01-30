@@ -41,7 +41,7 @@ function getCurrentFormattedDate() {
 function renderSendingMessage(newMessageText, user) {
   const formattedDate = getCurrentFormattedDate();
   messageContainer.innerHTML += `
-      <div id="deleteMessage">
+      <div id="deleteMessage" class="messageBox {% if message.author == request.user %} authorMessage{% endif %}">
         <span class="colorGrey">[${formattedDate}] </span>${user}: <i class="colorGrey">${newMessageText}</i>
       </div>`;
 }
@@ -50,7 +50,7 @@ function renderSentMessage(newMessageText, user, createdAt) {
   const formattedDate = getCurrentFormattedDate(new Date(createdAt));
   document.getElementById("deleteMessage").remove();
   messageContainer.innerHTML += `
-    <div>
+    <div class="messageBox {% if message.author == request.user %} authorMessage{% endif %}">
     <span class="colorGrey">[${formattedDate}] </span>${user}: <i>${newMessageText}</i>
     </div>`;
   messageField.value = "";
@@ -60,7 +60,7 @@ function renderMessageNotSent(newMessageText, user) {
   const formattedDate = getCurrentFormattedDate();
   document.getElementById("deleteMessage").remove();
   messageContainer.innerHTML += `
-    <div>
+    <div class="messageBox {% if message.author == request.user %} authorMessage{% endif %}">
     <span class="colorGrey">[${formattedDate}] </span>${user}: <i class="colorRed">${newMessageText} (Message not sent)</i>
     </div>`;
 }

@@ -1,42 +1,47 @@
 .page-content {
-    padding: 100px 100px;
-  }
+  padding: 100px 100px;
+}
 
-  .colorGrey {
-    color: gray;
-  }
+.colorGrey {
+  color: gray;
+}
 
-  .colorRed {
-    color: red;
-  }
+.colorRed {
+  color: red;
+}
 
-  .logout {
-    position: absolute;
-    right: 20px;
-    top: 50px;
-  }
+.central {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
 
-  .disabled {
-    filter: grayscale(1);
-    color: gray !important;
-  }
+.logout {
+  position: absolute;
+  right: 20px;
+  top: 50px;
+}
+
+.disabled {
+  filter: grayscale(1);
+  color: gray !important;
+}
 
 #messageContainer {
   display: flex;
   flex-direction: column;
-
 }
 
-  .messageBox {
-    margin: 4px;
-    background-color: pink;
-    padding: 8px;
-    width: 30vw;
-    overflow: auto;
-    border: blue 2px solid;
-    border-radius: 10px;
-  }
+.messageBox {
+  margin: 4px;
+  background-color: pink;
+  padding: 8px;
+  width: 30vw;
+  overflow: auto;
+  border: blue 2px solid;
+  border-radius: 10px;
+}
 
-  .authorMessage {
-      margin-left: auto;
-  }
+.authorMessage {
+  margin-left: auto;
+}
